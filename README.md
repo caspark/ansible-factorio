@@ -13,10 +13,10 @@ on non-AWS servers below).
 
 Make sure you have Python 2 (with the pip and virtualenv packages) and git installed locally already:
 
-    sudo apt install -y git python python-dev python-pip  # install git + core python packages
-    sudo pip install virtualenv   # install python virtual env package system-wide
+    sudo apt install -y git python python-dev python-pip
+    sudo pip install virtualenv
 
-Then install ansible and dependencies of this playbook:
+Then install Ansible:
 
     virtualenv .ansible-venv      # create a virtual env to avoid interfering with python packages installed system-wide
     . .ansible-venv/bin/activate  # activate the python virtual env for this shell session
