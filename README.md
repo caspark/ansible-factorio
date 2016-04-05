@@ -1,8 +1,8 @@
 # Ansible Factorio playbook
 
-A ansible playbook which installs a Factorio headless server on an Ubuntu x64 14.04 server and makes it manageable using
-upstart (e.g. `service factorio start`) via [factorio-init](https://github.com/Bisa/factorio-init). You still need to
-upload an initial Factorio save game to the server using e.g. `scp`.
+An ansible playbook which installs a Factorio headless server on an Ubuntu x64 14.04 server and makes it manageable
+using upstart (e.g. `service factorio start`) via [factorio-init](https://github.com/Bisa/factorio-init). You still need
+to upload an initial Factorio save game to the server using e.g. `scp`.
 
 The instructions are written for an AWS Ubuntu 14.04 server but they should work with other providers as well (see notes
 on non-AWS servers below).
@@ -69,3 +69,6 @@ I don't test with other configurations, but that aside, you should be able to us
 * If you want to log in as root, you should specify `--user root`
 * If you don't want your user account to use sudo (e.g. using root login), then leave off `--become`
 * If sudo requires a password, include `--ask-become-pass` as an argument
+* If you need to use a password to authenticate over SSH, include `--ask-pass` as an argument
+
+For more special case scenarios, see the Ansible documentation.
