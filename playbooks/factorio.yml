@@ -1,0 +1,84 @@
+---
+- hosts: all
+  vars:
+    # the version is only used for the initial install, so it won't auto-update if you specify a new version and re-run
+    # the playbook (but see https://github.com/narc0tiq/factorio-updater for something along those lines)
+    - factorio_version: '0.12.29'
+    - factorio_user: 'factorio'
+    - factorio_group: 'factorio'
+    - factorio_port: '34197'
+    # The latency expected between peers (milliseconds)
+    # Try to set this to the highest latency + 30
+    # If Peer A and B have a latency of 100 between each other, set this to 130
+    - factorio_latency: 250
+    - factorio_autosave_interval: 10
+    # Default in Factorio is 3, but you probably want more than that for a server which has no password protection
+    - factorio_autosave_slots: 50
+    # Extra arguments to pass to the Factorio headless server.
+    # If all your users have good connections to each other, you can add "--peer-to-peer" here
+    - factorio_bin_args: "--disallow-commands"
+
+  tasks:
+    - name: Install required packages for ansible and factorio-related scripts
+      script: install_missing_package.sh {{item}}
+      register: res
+      changed_when: "res.stdout.startswith('Install')"
+      with_items:
+         - python
+         - python-apt
+         - python-pycurl
+         - aptitude
+         # we need git to clone factorio-init
+         - git
+
+    - name: Create OS group for factorio
+      group:
+        name: "{{ factorio_group }}"
+        state: present
+
+    - name: Create OS user for factorio
+      user:
+        name: "{{ factorio_user }}"
+        state: present
+
+    - name: Download Factorio headless server to /tmp/factorio-{{ factorio_version }}.tar.gz
+      get_url:
+        url: https://www.factorio.com/get-download/{{ factorio_version }}/headless/linux64
+        dest: /tmp/factorio-{{ factorio_version }}.tar.gz
+
+    - name: Extract Factorio headless server to /opt/factorio
+      unarchive:
+        src: /tmp/factorio-{{ factorio_version }}.tar.gz
+        copy: no
+        dest: /opt
+        creates: /opt/factorio
+
+    - name: Ensure save game directory for Factorio in /opt/factorio/saves exists and anyone can write to it (for easier uploading of save files)
+      file:
+        path: /opt/factorio/saves
+        state: directory
+        mode: a+w
+
+    - name: Make /opt/factorio owned by {{ factorio_user }}
+      file:
+        path: /opt/factorio
+        state: directory
+        owner: "{{ factorio_user }}"
+        group: "{{ factorio_group }}"
+        recurse: yes
+
+    - name: Clone factorio-init repo to /opt/factorio-init for easier Factorio server management
+      git:
+        repo: https://github.com/Bisa/factorio-init.git
+        dest: /opt/factorio-init
+
+    - name: Update configuration for factorio-init script
+      template:
+        src: factorio-init-config
+        dest: /opt/factorio-init/config
+
+    - name: Symlink factorio-init script to /etc/init.d/factorio
+      file:
+        path: /etc/init.d/factorio
+        src: /opt/factorio-init/factorio
+        state: link
