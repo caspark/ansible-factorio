@@ -3,7 +3,7 @@
   vars:
     # the version is only used for the initial install, so it won't auto-update if you specify a new version and re-run
     # the playbook (but see https://github.com/narc0tiq/factorio-updater for something along those lines)
-    - factorio_version: '0.12.29'
+    - factorio_version: '0.12.33'
     - factorio_user: 'factorio'
     - factorio_group: 'factorio'
     - factorio_port: '34197'
@@ -28,8 +28,10 @@
          - python-apt
          - python-pycurl
          - aptitude
-         # we need git to clone factorio-init
+         # we need git to clone factorio-init and factorio-updater
          - git
+         # we need pip to install the Python requests library later, which is used by factorio-updater
+         - python-pip
 
     - name: Create OS group for factorio
       group:
@@ -76,6 +78,15 @@
       template:
         src: factorio-init-config
         dest: /opt/factorio-init/config
+
+    - name: Install python request package from pip as a prereq for factorio-updater
+      pip:
+        name: requests
+
+    - name: Clone factorio-updater git repo to /opt/factorio-updater for easier Factorio updating
+      git:
+        repo: https://github.com/narc0tiq/factorio-updater.git
+        dest: /opt/factorio-updater
 
     - name: Symlink factorio-init script to /etc/init.d/factorio
       file:

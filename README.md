@@ -1,7 +1,8 @@
 # Ansible Factorio playbook
 
 An ansible playbook which installs a Factorio headless server on an Ubuntu x64 14.04 server and makes it manageable
-using upstart (e.g. `service factorio start`) via [factorio-init](https://github.com/Bisa/factorio-init). You still need
+using upstart (e.g. `service factorio start`) via [factorio-init](https://github.com/Bisa/factorio-init), including
+version upgrades via [factorio-updater](https://github.com/narc0tiq/factorio-updater). You still need
 to upload an initial Factorio save game to the server using e.g. `scp`.
 
 The instructions are written for an AWS Ubuntu 14.04 server but they should work with other providers as well (see notes
@@ -36,8 +37,10 @@ If it all succeeds, you should be able to SCP up your save game and start your s
     sudo service factorio start   # loads the most recently modified save into your server
     sudo service factorio screen  # view server logs using Screen (press "Ctrl+a, d" to leave Screen)
     sudo service factorio stop    # should save the game and quit (but make a client-side save just in case)
+    sudo service factorio update  # updates factorio server to latest version using factorio-updater
 
-See https://github.com/Bisa/factorio-init for more info on the init script.
+* See https://github.com/Bisa/factorio-init for more info on the init script
+* See https://github.com/narc0tiq/factorio-updater for more info on the factorio update command
 
 # Troubleshooting
 

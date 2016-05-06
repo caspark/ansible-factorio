@@ -50,7 +50,7 @@ PACKAGE_DIR_NAME=factorio
 #
 
 # absolute path to the factorio-updater script
-UPDATE_SCRIPT=/path/to/update_factorio.py
+UPDATE_SCRIPT=/opt/factorio-updater/update_factorio.py
 # Note that if you set HEADLESS=1 the username/token will not be used as the headless
 # download is provided free of charge
 HEADLESS=1
