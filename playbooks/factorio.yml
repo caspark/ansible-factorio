@@ -3,7 +3,7 @@
   vars:
     # the version is only used for the initial install, so it won't auto-update if you specify a new version and re-run
     # the playbook (but see https://github.com/narc0tiq/factorio-updater for something along those lines)
-    - factorio_version: '0.12.33'
+    - factorio_version: '0.12.35'
     - factorio_user: 'factorio'
     - factorio_group: 'factorio'
     - factorio_port: '34197'
