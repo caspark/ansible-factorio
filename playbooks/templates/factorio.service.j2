@@ -1,0 +1,17 @@
+[Unit]
+Description=Factorio
+
+[Service]
+User=factorio
+TimeoutStartSec=5
+# Use this to always have systemd start the server using the last autosave
+ExecStartPre=/usr/local/bin/factorio refresh-save
+ExecStart=/opt/factorio/bin/x64/factorio --config /opt/factorio/config/config.ini --port {{ factorio_port }} --start-server {{ factorio_save }} --autosave-interval {{ factorio_autosave_interval }} --autosave-slots {{ factorio_autosave_slots }} --latency-ms {{ factorio_latency }} 
+TimeoutStopSec=10
+ExecStop=/usr/local/bin/factorio stop
+RestartSec=10
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+

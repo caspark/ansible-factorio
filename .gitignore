@@ -1,1 +1,3 @@
 /.ansible-venv/
+*.swp
+*.retry
